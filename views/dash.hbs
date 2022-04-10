@@ -1,0 +1,20 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Roll No:</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Place</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{rollno}}</th>
+      <td>{{name}}</td>
+      <td>{{email}}</td>
+      <td>{{place}}</td>
+      <td><a class="btn btn-primary" href="/edit/{{email}}">Edit</a></td>
+      <td><a class="btn btn-danger" href="/delete/{{email}}">Delete</a></td>
+    </tr>
+  </tbody>
+</table>
