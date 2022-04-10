@@ -61,7 +61,7 @@ router.post('/login', (req, res) => {
           //console.log(rows[0].email);
           return res.render('dash', { title: 'Dashboard', email: rows[0].email, rollno: rows[0].rollno, name: rows[0].name, place: rows[0].place });
         } else {
-          res.send('Invalid email id or password');
+          return res.send('Invalid email id or password');
         }
       } else {
         console.log(err.message);
@@ -82,7 +82,7 @@ router.get('/edit/:email', (req, res) => {
           //console.log(rows[0].email);
           return res.render('edit', { title: 'Update profile', email: rows[0].email, rollno: rows[0].rollno, name: rows[0].name, place: rows[0].place });
         } else {
-          res.send('No user exists');
+          return res.send('No user exists');
         }
       } else {
         console.log(err.message);
@@ -105,7 +105,7 @@ router.post('/edit', (req, res) => {
           //console.log(rows[0].email);
           return res.render('dash', { title: 'Dashboard', email, name, rollno, place });
         } else {
-          res.send('There was no change in the data');
+          return res.send('There was no change in the data');
         }
       } else {
         console.log(err.message);
@@ -122,13 +122,79 @@ router.get('/delete/:email', (req, res) => {
   try {
     mysqlConnection.query(`DELETE FROM students WHERE email="${req.params.email}"`, (err, rows, fields) => {
       if (!err) {
-        console.log(rows);
         if(rows.affectedRows > 0) {
-          res.redirect('/');
+          return res.redirect('/');
           //console.log(rows[0].email);
           //return res.render('dash', { title: 'Dashboard', email, name, rollno, place });
         } else {
-          res.send('No user exists');
+          return res.send('No user exists');
+        }
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/library/:email', (req, res) => {
+  try {
+    mysqlConnection.query(`SELECT * FROM books WHERE quantity > 0`, (err, rows, fields) => {
+      if (!err) {
+        return res.render('library', { title: 'Library Dashboard', email: req.params.email, books: rows });
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/add-book/:email', (req, res) => {
+  res.render('add-book', { title: 'Add Book', email: req.params.email });
+});
+
+router.post('/add-book', (req, res) => {
+  const { bookName, author, price, quantity } = req.body;
+  try {
+    mysqlConnection.query(`INSERT INTO books(bookName, author, price, quantity) VALUES("${bookName}", "${author}", "${price}", "${quantity}")`, (err, rows, fields) => {
+      if (!err) {
+        return res.redirect(`/library/${req.body.email}`);
+      } else {
+        console.log(err.message);
+        console.log(err.status);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/buy-book', (req, res) => {
+  //console.log(req.query);
+  try {
+    mysqlConnection.query(`UPDATE books SET quantity=quantity-${1} WHERE bookId="${req.query.bookId}"`, (err, rows, fields) => {
+      if (!err) {
+        if(rows.changedRows > 0) {
+          mysqlConnection.query(`INSERT INTO sales(bookId, user) VALUES("${req.query.bookId}", "${req.query.email}")`, (err, rows, fields) => {
+            if (!err) {
+              //console.log(rows);
+              return res.redirect(`/library/${req.query.email}`);
+            } else {
+              console.log(err.message);
+              res.render('error', { title: 'Error' , err});
+            }
+          });
+        } else {
+          res.send('There was no change in the data');
         }
       } else {
         console.log(err.message);

@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">User Dashboard</a>
+  <a class="navbar-brand" href="#">Libary Dashboard</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -10,7 +10,10 @@
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/library/{{email}}">Library</a>
+        <a class="nav-link" href="/library">Library</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/add-book/{{email}}">Add Book</a>
       </li>
       {{!-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,21 +33,24 @@
   <table class="table">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Roll No:</th>
+      <th scope="col">Book No:</th>
       <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Place</th>
+      <th scope="col">Author</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
     </tr>
   </thead>
   <tbody>
+      {{#each books}}
     <tr>
-      <th scope="row">{{rollno}}</th>
-      <td>{{name}}</td>
-      <td>{{email}}</td>
-      <td>{{place}}</td>
-      <td><a class="btn btn-primary" href="/edit/{{email}}">Edit</a></td>
-      <td><a class="btn btn-danger" href="/delete/{{email}}">Delete</a></td>
+      <th scope="row">{{this.bookId}}</th>
+      <td>{{this.bookName}}</td>
+      <td>{{this.author}}</td>
+      <td>{{this.price}}</td>
+      <td>{{this.quantity}}</td>
+      <td><a class="btn btn-danger" href="/buy-book?bookId={{this.bookId}}&email={{../email}}">Buy</a></td>
     </tr>
+    {{/each}}
   </tbody>
 </table>
 </div>

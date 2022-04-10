@@ -1,0 +1,23 @@
+<h1>Add book</h1>
+<form action="/add-book" method="post">
+  <div class="form-group">
+    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{email}}" hidden>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Book Name</label>
+    <input type="text" name="bookName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter book name" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Author Name</label>
+    <input type="text" name="author" class="form-control" id="exampleInputPassword1" placeholder="Enter author's name" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Price</label>
+    <input type="text" name="price" class="form-control" id="exampleInputPassword1" placeholder="Enter price" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Quantity</label>
+    <input type="text" name="quantity" class="form-control" id="exampleInputPassword1" placeholder="Enter price" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
