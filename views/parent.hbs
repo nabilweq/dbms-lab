@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">User Dashboard</a>
+  <a class="navbar-brand" href="#">Guardian Dashboard</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -14,10 +14,6 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/my-marks/{{email}}">My marks</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/parent/{{email}}">Guardian Details</a>
-      </li>
       {{!-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown link
@@ -31,27 +27,30 @@
     </ul>
   </div>
 </nav>
-
+{{#if parent}}
 <div class="container">
   <table class="table">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Roll No:</th>
       <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Place</th>
+      <th scope="col">Age</th>
+      <th scope="col">Job</th>
+      <th scope="col">Relation</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">{{rollno}}</th>
-      <td>{{name}}</td>
-      <td>{{email}}</td>
-      <td>{{place}}</td>
-      <td><a class="btn btn-primary" href="/edit/{{email}}">Edit</a></td>
-      <td><a class="btn btn-danger" href="/delete/{{email}}">Delete</a></td>
+      <th scope="row">{{parent.name}}</th>
+      <td>{{parent.age}}</td>
+      <td>{{parent.job}}</td>
+      <td>{{parent.relation}}</td>
     </tr>
   </tbody>
 </table>
 </div>
+
+{{else}}
+<h1>You haven't entered your guardian details.</h1><br>
+<a class="btn btn-primary" href="/add-parent/{{email}}">Add details</a>
+{{/if}}
 

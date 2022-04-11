@@ -207,4 +207,82 @@ router.get('/buy-book', (req, res) => {
   }
 });
 
+router.get('/my-marks/:email', (req, res) => {
+  try {
+    mysqlConnection.query(`SELECT * FROM marks WHERE user="${req.params.email}"`, (err, rows, fields) => {
+      if (!err) {
+        console.log(rows);
+        res.render('my-marks', { title: 'Marks', email: req.params.email, marks: rows });
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/add-mark/:email', (req, res) => {
+  res.render('add-mark', { title: 'Add Mark', email: req.params.email});
+});
+
+router.post('/add-mark', (req, res) => {
+  const { email,subject, mark, total } = req.body;
+  try {
+    mysqlConnection.query(`INSERT INTO marks(user, subject, marks, total) VALUES("${email}", "${subject}", "${mark}", "${total}")`, (err, rows, fields) => {
+      if (!err) {
+        //console.log(rows);
+        return res.redirect(`/my-marks/${req.body.email}`);
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/parent/:email', (req, res) => {
+  try {
+    mysqlConnection.query(`SELECT * FROM parents WHERE student="${req.params.email}"`, (err, rows, fields) => {
+      if (!err) {
+        //console.log(rows);
+        return res.render('parent', { title: 'Parent', email: req.params.email, parent: rows[0] });
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/add-parent/:email', (req, res) => {
+  res.render('add-parent', { title: 'Add Parent', email: req.params.email});
+});
+
+router.post('/add-parent', (req, res) => {
+  const { email, name, age, job, relation } = req.body;
+  try {
+    mysqlConnection.query(`INSERT INTO parents(student, name, age, job, relation) VALUES("${email}", "${name}", "${age}", "${job}", "${relation}")`, (err, rows, fields) => {
+      if (!err) {
+        //console.log(rows);
+        return res.redirect(`/parent/${req.body.email}`);
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
 module.exports = router;

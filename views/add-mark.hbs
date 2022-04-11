@@ -1,0 +1,19 @@
+<h1>Add mark</h1>
+<form action="/add-mark" method="post">
+  <div class="form-group">
+    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{email}}" hidden>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Subject</label>
+    <input type="text" name="subject" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter subject name" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Mark</label>
+    <input type="text" name="mark" class="form-control" id="exampleInputPassword1" placeholder="Enter the mark" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Total mark</label>
+    <input type="text" name="total" class="form-control" id="exampleInputPassword1" placeholder="Enter the total mark" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
