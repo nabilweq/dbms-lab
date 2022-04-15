@@ -156,27 +156,23 @@ router.get('/library/:email', (req, res) => {
   }
 });
 
-router.get('/add-book/:email', (req, res) => {
-  res.render('add-book', { title: 'Add Book', email: req.params.email });
-});
-
-router.post('/add-book', (req, res) => {
-  const { bookName, author, price, quantity } = req.body;
-  try {
-    mysqlConnection.query(`INSERT INTO books(bookName, author, price, quantity) VALUES("${bookName}", "${author}", "${price}", "${quantity}")`, (err, rows, fields) => {
-      if (!err) {
-        return res.redirect(`/library/${req.body.email}`);
-      } else {
-        console.log(err.message);
-        console.log(err.status);
-        return res.render('error', { title: 'Error' , err});
-      }
-    });
-  } catch (err) {
-    console.log(err.message);
-    res.render('error', { title: 'Error', err });
-  }
-});
+// router.post('/add-book', (req, res) => {
+//   const { bookName, author, price, quantity } = req.body;
+//   try {
+//     mysqlConnection.query(`INSERT INTO books(bookName, author, price, quantity) VALUES("${bookName}", "${author}", "${price}", "${quantity}")`, (err, rows, fields) => {
+//       if (!err) {
+//         return res.redirect(`/library/${req.body.email}`);
+//       } else {
+//         console.log(err.message);
+//         console.log(err.status);
+//         return res.render('error', { title: 'Error' , err});
+//       }
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.render('error', { title: 'Error', err });
+//   }
+// });
 
 router.get('/buy-book', (req, res) => {
   //console.log(req.query);
@@ -184,7 +180,7 @@ router.get('/buy-book', (req, res) => {
     mysqlConnection.query(`UPDATE books SET quantity=quantity-${1} WHERE bookId="${req.query.bookId}"`, (err, rows, fields) => {
       if (!err) {
         if(rows.changedRows > 0) {
-          mysqlConnection.query(`INSERT INTO sales(bookId, user) VALUES("${req.query.bookId}", "${req.query.email}")`, (err, rows, fields) => {
+          mysqlConnection.query(`INSERT INTO myBooks(bookId, student) VALUES("${req.query.bookId}", "${req.query.email}")`, (err, rows, fields) => {
             if (!err) {
               //console.log(rows);
               return res.redirect(`/library/${req.query.email}`);
@@ -209,32 +205,10 @@ router.get('/buy-book', (req, res) => {
 
 router.get('/my-marks/:email', (req, res) => {
   try {
-    mysqlConnection.query(`SELECT * FROM marks WHERE user="${req.params.email}"`, (err, rows, fields) => {
+    mysqlConnection.query(`SELECT * FROM marks WHERE student="${req.params.email}"`, (err, rows, fields) => {
       if (!err) {
         console.log(rows);
         res.render('my-marks', { title: 'Marks', email: req.params.email, marks: rows });
-      } else {
-        console.log(err.message);
-        return res.render('error', { title: 'Error' , err});
-      }
-    });
-  } catch (err) {
-    console.log(err.message);
-    res.render('error', { title: 'Error', err });
-  }
-});
-
-router.get('/add-mark/:email', (req, res) => {
-  res.render('add-mark', { title: 'Add Mark', email: req.params.email});
-});
-
-router.post('/add-mark', (req, res) => {
-  const { email,subject, mark, total } = req.body;
-  try {
-    mysqlConnection.query(`INSERT INTO marks(user, subject, marks, total) VALUES("${email}", "${subject}", "${mark}", "${total}")`, (err, rows, fields) => {
-      if (!err) {
-        //console.log(rows);
-        return res.redirect(`/my-marks/${req.body.email}`);
       } else {
         console.log(err.message);
         return res.render('error', { title: 'Error' , err});
@@ -274,6 +248,63 @@ router.post('/add-parent', (req, res) => {
       if (!err) {
         //console.log(rows);
         return res.redirect(`/parent/${req.body.email}`);
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.get('/admin/add-book', (req, res) => {
+  res.render('add-book', { title: 'Add Book' });
+});
+
+router.get('/admin/add-mark/', (req, res) => {
+  try {
+    mysqlConnection.query(`SELECT * FROM students`, (err, rows, fields) => {
+      if (!err) {
+        return res.render('add-mark', { title: 'Add Mark', students: rows });
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.render('error', { title: 'Error', err });
+  }
+ 
+});
+
+router.post('/admin/add-book', (req, res) => {
+  const { bookName, author, price, quantity } = req.body;
+  try {
+    mysqlConnection.query(`INSERT INTO books(bookName, author, price, quantity) VALUES("${bookName}", "${author}", "${price}", "${quantity}")`, (err, rows, fields) => {
+      if (!err) {
+        return res.send("Book added");
+      } else {
+        console.log(err.message);
+        console.log(err.status);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
+router.post('/admin/add-mark', (req, res) => {
+  const { student,subject, mark, max, sem } = req.body;
+  try {
+    mysqlConnection.query(`INSERT INTO marks(student, subject, marks, maximum, sem) VALUES((SELECT email FROM students WHERE email ="${student}"), "${subject}", "${mark}", "${max}", "${sem}")`, (err, rows, fields) => {
+      if (!err) {
+        //console.log(rows);
+        return res.send("Mark added successfully");
       } else {
         console.log(err.message);
         return res.render('error', { title: 'Error' , err});

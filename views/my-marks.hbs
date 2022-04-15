@@ -12,9 +12,6 @@
       <li class="nav-item">
         <a class="nav-link" href="/library/{{email}}">Library</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/add-mark/{{email}}">Add Mark</a>
-      </li>
       {{!-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown link
@@ -36,6 +33,7 @@
       <th scope="col">Subject</th>
       <th scope="col">Mark</th>
       <th scope="col">Total</th>
+      <th scope="col">Semester</th>
     </tr>
   </thead>
   <tbody>
@@ -43,7 +41,8 @@
     <tr>
       <th scope="row">{{this.subject}}</th>
       <td>{{this.marks}}</td>
-      <td>{{this.total}}</td>
+      <td>{{this.maximum}}</td>
+      <td>{{this.sem}}</td>
     </tr>
     {{/each}}
   </tbody>

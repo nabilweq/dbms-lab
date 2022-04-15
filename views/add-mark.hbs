@@ -1,7 +1,12 @@
 <h1>Add mark</h1>
-<form action="/add-mark" method="post">
+<form action="/admin/add-mark" method="post">
   <div class="form-group">
-    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{email}}" hidden>
+    <select type="email" name="student" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
+      {{#each students}}
+        <option>Please choose a option</option>
+        <option value="{{this.email}}">{{this.name}}</option>
+      {{/each}}
+    </select>
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Subject</label>
@@ -13,7 +18,11 @@
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Total mark</label>
-    <input type="text" name="total" class="form-control" id="exampleInputPassword1" placeholder="Enter the total mark" required>
+    <input type="text" name="max" class="form-control" id="exampleInputPassword1" placeholder="Enter the total mark" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Semester</label>
+    <input type="text" name="sem" class="form-control" id="exampleInputPassword1" placeholder="Enter the semester" required>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
