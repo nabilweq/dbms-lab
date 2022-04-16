@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Libary Dashboard</a>
+  <a class="navbar-brand" href="#">My books</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -10,7 +10,7 @@
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/my-books/{{email}}">My books</a>
+        <a class="nav-link" href="/library/{{email}}">Library</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/my-marks/{{email}}">My marks</a>
@@ -40,7 +40,6 @@
       <th scope="col">Name</th>
       <th scope="col">Author</th>
       <th scope="col">Price</th>
-      <th scope="col">Quantity</th>
     </tr>
   </thead>
   <tbody>
@@ -50,8 +49,6 @@
       <td>{{this.bookName}}</td>
       <td>{{this.author}}</td>
       <td>{{this.price}}</td>
-      <td>{{this.quantity}}</td>
-      <td><a class="btn btn-danger" href="/buy-book?bookId={{this.bookId}}&email={{../email}}">Buy</a></td>
     </tr>
     {{/each}}
   </tbody>

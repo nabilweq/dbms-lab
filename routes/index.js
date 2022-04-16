@@ -203,11 +203,28 @@ router.get('/buy-book', (req, res) => {
   }
 });
 
+router.get('/my-books/:email', (req, res) => {
+  try {
+    mysqlConnection.query(`SELECT * FROM books INNER JOIN myBooks ON myBooks.bookId = books.bookId  WHERE myBooks.student=(SELECT email FROM students WHERE email ="${req.params.email}")`, (err, rows, fields) => {
+      if (!err) {
+        console.log(rows);
+        res.render('my-books', { title: 'Marks', email: req.params.email, books: rows });
+      } else {
+        console.log(err.message);
+        return res.render('error', { title: 'Error' , err});
+      }
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.render('error', { title: 'Error', err });
+  }
+});
+
 router.get('/my-marks/:email', (req, res) => {
   try {
     mysqlConnection.query(`SELECT * FROM marks WHERE student="${req.params.email}"`, (err, rows, fields) => {
       if (!err) {
-        console.log(rows);
+        //console.log(rows);
         res.render('my-marks', { title: 'Marks', email: req.params.email, marks: rows });
       } else {
         console.log(err.message);
