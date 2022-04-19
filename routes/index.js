@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var bcrypt = require('bcryptjs');
 
 var mysql = require('mysql');
 
@@ -27,12 +28,15 @@ router.get('/signup', (req, res) => {
   res.render('signup', { title: 'Signup' });
 });
 
-router.post('/signup', (req, res) => {
-  const { email, name, rollno, place, password } = req.body;
+router.post('/signup', async (req, res) => {
+  var { email, name, rollno, place, password } = req.body;
+  console.log(password);
+  password = await bcrypt.hash(password, 10)
+  console.log(password);
   try {
     mysqlConnection.query(`INSERT INTO students values("${email}", "${name}", ${rollno}, "${place}", "${password}")`, (err, rows, fields) => {
       if (!err) {
-        //console.log(rows);
+        
         return res.render('dash', { title: 'Dashboard', email, rollno, name, place });
       } else {
         console.log(err.message);
@@ -55,10 +59,10 @@ router.post('/login', (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
   try {
-    mysqlConnection.query(`SELECT * FROM students WHERE email="${email}"`, (err, rows, fields) => {
+    mysqlConnection.query(`SELECT * FROM students WHERE email="${email}"`, async (err, rows, fields) => {
       if (!err) {
-        if((rows.length> 0) && (rows[0].password === password)) {
-          //console.log(rows[0].email);
+
+        if((rows.length> 0) && await bcrypt.compare(password, rows[0].password)) {
           return res.render('dash', { title: 'Dashboard', email: rows[0].email, rollno: rows[0].rollno, name: rows[0].name, place: rows[0].place });
         } else {
           return res.send('Invalid email id or password');
@@ -79,7 +83,6 @@ router.get('/edit/:email', (req, res) => {
     mysqlConnection.query(`SELECT * FROM students WHERE email="${req.params.email}"`, (err, rows, fields) => {
       if (!err) {
         if(rows.length> 0) {
-          //console.log(rows[0].email);
           return res.render('edit', { title: 'Update profile', email: rows[0].email, rollno: rows[0].rollno, name: rows[0].name, place: rows[0].place });
         } else {
           return res.send('No user exists');
@@ -95,14 +98,13 @@ router.get('/edit/:email', (req, res) => {
   }
 });
 
-router.post('/edit', (req, res) => {
+router.post('/edit', (req, res) => { 
   const { email, name, rollno, place } = req.body;
   try {
     mysqlConnection.query(`UPDATE students SET name="${name}", rollno="${rollno}", place="${place}" WHERE email="${email}"`, (err, rows, fields) => {
       if (!err) {
         console.log(rows);
         if(rows.changedRows > 0) {
-          //console.log(rows[0].email);
           return res.render('dash', { title: 'Dashboard', email, name, rollno, place });
         } else {
           return res.send('There was no change in the data');
@@ -124,8 +126,6 @@ router.get('/delete/:email', (req, res) => {
       if (!err) {
         if(rows.affectedRows > 0) {
           return res.redirect('/');
-          //console.log(rows[0].email);
-          //return res.render('dash', { title: 'Dashboard', email, name, rollno, place });
         } else {
           return res.send('No user exists');
         }
@@ -156,25 +156,7 @@ router.get('/library/:email', (req, res) => {
   }
 });
 
-// router.post('/add-book', (req, res) => {
-//   const { bookName, author, price, quantity } = req.body;
-//   try {
-//     mysqlConnection.query(`INSERT INTO books(bookName, author, price, quantity) VALUES("${bookName}", "${author}", "${price}", "${quantity}")`, (err, rows, fields) => {
-//       if (!err) {
-//         return res.redirect(`/library/${req.body.email}`);
-//       } else {
-//         console.log(err.message);
-//         console.log(err.status);
-//         return res.render('error', { title: 'Error' , err});
-//       }
-//     });
-//   } catch (err) {
-//     console.log(err.message);
-//     res.render('error', { title: 'Error', err });
-//   }
-// });
-
-router.get('/buy-book', (req, res) => {
+router.get('/buy-book', (req, res) => { 
   //console.log(req.query);
   try {
     mysqlConnection.query(`UPDATE books SET quantity=quantity-${1} WHERE bookId="${req.query.bookId}"`, (err, rows, fields) => {
